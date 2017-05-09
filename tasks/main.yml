@@ -22,6 +22,21 @@
   package: name=firefox state=present
   when: selenium_install_firefox
   tags: [configuration, selenium, selenium-firefox]
+  
+- name: Get the latest release for geckodriver
+  shell: 'curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep "browser_download_url.*linux64.tar.gz" | cut -d : -f 2,3 | tr -d \"'
+  register: geckodriver_latest
+  when: selenium_install_firefox
+  tags: [configuration, selenium, selenium-firefox]
+
+- name: Install geckodriver
+  unarchive:
+    src: "{{ geckodriver_latest.stdout_lines | join('') | trim }}"
+    dest: /usr/bin
+    mode: 0755
+    copy: no
+  when: selenium_install_firefox
+  tags: [configuration, selenium, selenium-firefox]
 
 - name: Add Chrome key (if configured, Debian)
   apt_key:
