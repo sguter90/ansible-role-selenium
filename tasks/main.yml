@@ -87,8 +87,18 @@
 - name: Install xvfb
   package: name={{ selenium_xvfb_package }}
   tags: [configuration, selenium, selenium-xvfb]
+  
+- name: Install xvfb systemd unit file (for systemd systems)
+  template:
+    src: "xvfb-unit.j2"
+    dest: /etc/systemd/system/xvfb.service
+    owner: root
+    group: root
+    mode: 0755
+  when: "ansible_service_mgr == 'systemd'"
+  tags: [configuration, selenium, selenium-xvfb]
 
-- name: Install init script
+- name: Install selenium init script
   template:
     src: "selenium-init-{{ ansible_os_family }}.j2"
     dest: /etc/init.d/selenium
@@ -98,7 +108,7 @@
   when: "ansible_service_mgr != 'systemd'"
   tags: [configuration, selenium, selenium-install]
 
-- name: Install systemd unit file (for systemd systems)
+- name: Install selenium systemd unit file (for systemd systems)
   template:
     src: "selenium-unit.j2"
     dest: /etc/systemd/system/selenium.service
