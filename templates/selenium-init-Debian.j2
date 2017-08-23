@@ -37,7 +37,7 @@ case "$1" in
         else
             log_daemon_msg "Starting Selenium server"
             log_progress_msg "selenium"
-            start-stop-daemon -c $RUN_AS --start --quiet --background --pidfile $DAEMON_PID_FILE --make-pidfile --exec $XVFB_BIN {{ selenium_xvfb_args }} $JAVA_BIN -- $SELENIUM_DAEMON_OPTS
+            start-stop-daemon -c $RUN_AS --start --quiet --background --pidfile $DAEMON_PID_FILE --make-pidfile --exec $XVFB_BIN -- {{ selenium_xvfb_args }} $JAVA_BIN $SELENIUM_DAEMON_OPTS
         fi
         ;;
 
